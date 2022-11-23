@@ -117,6 +117,7 @@ def convert_tag_string(tag_string: str):
 def new(request):
     initial_url = request.GET.get('url')
     initial_auto_close = 'auto_close' in request.GET
+    return_url = get_safe_return_url(request.GET.get('return_url'), reverse('bookmarks:index'))
 
     if request.method == 'POST':
         form = BookmarkForm(request.POST)
@@ -128,7 +129,7 @@ def new(request):
             if auto_close:
                 return HttpResponseRedirect(reverse('bookmarks:close'))
             else:
-                return HttpResponseRedirect(reverse('bookmarks:index'))
+                return HttpResponseRedirect(return_url)
     else:
         form = BookmarkForm()
         if initial_url:
@@ -139,7 +140,7 @@ def new(request):
     context = {
         'form': form,
         'auto_close': initial_auto_close,
-        'return_url': reverse('bookmarks:index')
+        'return_url': return_url
     }
 
     return render(request, 'bookmarks/new.html', context)
