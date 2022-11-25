@@ -133,9 +133,9 @@ def new(request):
                 return HttpResponseRedirect(return_url)
     else:
         form = BookmarkForm()
-        query_string = re.search(r'q=.*', return_url)
+        query_string = re.search(r'(?<=q=)(.*)', return_url)
         if query_string:
-            qs = urllib.parse.unquote(query_string.group(0)[2:]).replace("+", " ")
+            qs = urllib.parse.unquote(query_string.group(0)).replace("+", " ")
             parsed_query = queries.parse_query_string(qs)
             form.initial['tag_string'] = " ".join(parsed_query['tag_names'])
 
